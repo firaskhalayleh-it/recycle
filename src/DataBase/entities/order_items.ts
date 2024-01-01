@@ -22,10 +22,13 @@ export class OrderItems extends BaseEntity {
     })
     product: Product;
 
+    @Column({nullable: true})
+    quantity: number;
+
     @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date;
 
     @Column({type:'timestamp'})
     updated_at: Date;
-    
+
 }

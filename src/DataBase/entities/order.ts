@@ -16,6 +16,17 @@ export class Order extends BaseEntity{
     @Column({nullable: true})
     total: number;
 
+    @Column({nullable: true,type:'boolean'})
+    status: boolean;
+
+    @OneToOne(()=> User, {cascade: true})
+    @JoinColumn({
+        name: 'provider_id',
+        referencedColumnName: 'id'
+    })
+        provider: User;
+
+
     @Column({nullable: true})
     payment_id: number;
 
