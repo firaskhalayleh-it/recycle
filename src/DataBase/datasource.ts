@@ -1,4 +1,7 @@
 import typeorm, { BaseEntity, DataSource, Entity } from 'typeorm';
+import { User } from './entities/user';
+import { Roles } from './entities/Roles';
+import { UserAddress } from './entities/user_address';
 
 const Datasource = new DataSource({
     type: 'mysql',
@@ -7,7 +10,7 @@ const Datasource = new DataSource({
     username: 'root',
     password: '',
     database: 'recycle',
-    entities: [],
+    entities: [User,Roles,UserAddress],
     synchronize: true,
     logging: false,
 
