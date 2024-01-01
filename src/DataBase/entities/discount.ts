@@ -13,6 +13,7 @@ export class Discount extends BaseEntity {
 
     @Column({ nullable: true, type:'decimal' })
     discount_percent: number;
+        
 
     @Column({  type:'boolean', default: true })
     active: boolean;
