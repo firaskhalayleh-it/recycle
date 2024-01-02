@@ -1,13 +1,13 @@
 import express from 'express';
 import datasource from './DataBase/datasource.js';
+import router from './routes/UserRoutes.ts/UserRoute.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.get('/', (req,res)=>{
-    res.send('this web server is working');
-    console.log('this web server is working');
-})
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use('/api', router);
 
 app.listen(port, ()=>{
     datasource.initilizeDB();

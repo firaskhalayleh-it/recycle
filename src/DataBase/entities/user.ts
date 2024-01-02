@@ -1,4 +1,4 @@
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Roles } from './Roles';
 
@@ -25,8 +25,8 @@ export class User extends BaseEntity {
     @Column({ nullable: false })
     telephone: string;
 
-    @OneToOne(() => Roles, { cascade: true ,eager:true,nullable:true})
-    @JoinColumn({ name: 'role_id' }) 
+    @ManyToOne(() => Roles, role => role.users)
+    @JoinColumn({ name: 'role_id' })
     role: Roles;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -34,6 +34,7 @@ export class User extends BaseEntity {
 
     @Column({nullable:true}) 
     updated_at: Date;
+
 
     @BeforeInsert()
     encryptPassword() {

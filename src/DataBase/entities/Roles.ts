@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 import { User } from "./user";
 export const ROLES = {
     USER : 'user',
@@ -15,6 +15,9 @@ export class Roles extends BaseEntity{
 
     @Column({nullable: true ,type:'enum', enum: ROLES, default: null})
     name: string;
+
+    @OneToMany(() => User, user => user.role)
+    users: User[];
 
  
 }
