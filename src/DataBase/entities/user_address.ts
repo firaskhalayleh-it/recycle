@@ -23,9 +23,5 @@ export class UserAddress extends BaseEntity{
     @Column({nullable: true})
     country: string;
 
-    @Column({nullable: true})
-    telephone: string;
-
-    @Column({nullable: true})
-    mobile: string;
+  
 }

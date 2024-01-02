@@ -1,6 +1,7 @@
 import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Roles } from './Roles';
+import { UserAddress } from './user_address';
 
 @Entity()
 export class User extends BaseEntity {
@@ -29,6 +30,9 @@ export class User extends BaseEntity {
     @JoinColumn({ name: 'role_id' })
     role: Roles;
 
+    @OneToOne(() => UserAddress, userAddress => userAddress.user)
+    userAddress: UserAddress;
+    
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
