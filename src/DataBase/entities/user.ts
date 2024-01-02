@@ -25,14 +25,14 @@ export class User extends BaseEntity {
     @Column({ nullable: false })
     telephone: string;
 
-    @OneToOne(() => Roles, { cascade: true })
+    @OneToOne(() => Roles, { cascade: true ,eager:true,nullable:true})
     @JoinColumn({ name: 'role_id' }) 
     role: Roles;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column() 
+    @Column({nullable:true}) 
     updated_at: Date;
 
     @BeforeInsert()
