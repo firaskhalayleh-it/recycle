@@ -28,7 +28,7 @@ export class OrderItems extends BaseEntity {
     @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date;
 
-    @Column({type:'timestamp'})
+    @Column()
     updated_at: Date;
 
 }

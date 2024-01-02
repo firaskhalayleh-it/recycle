@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
+import { Cart } from "./cart";
 
 @Entity()   
 export class Order extends BaseEntity{
@@ -26,7 +27,9 @@ export class Order extends BaseEntity{
     })
         provider: User;
 
-
+        @ManyToOne(() => Cart, cart => cart.orders)
+        cart: Cart;
+        
     @Column({nullable: true})
     payment_id: number;
 

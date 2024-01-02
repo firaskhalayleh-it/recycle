@@ -2,6 +2,14 @@ import typeorm, { BaseEntity, DataSource, Entity } from 'typeorm';
 import { User } from './entities/user';
 import { Roles } from './entities/Roles';
 import { UserAddress } from './entities/user_address';
+import { Cart } from './entities/cart';
+import { Discount } from './entities/discount';
+import { Order } from './entities/order';
+import { OrderItems } from './entities/order_items';
+import { Product } from './entities/product';
+import { ProductCategory } from './entities/product_category';
+import { ProductInventory } from './entities/product_inventory';
+import { UserPayment } from './entities/user_payment';
 
 const Datasource = new DataSource({
     type: 'mysql',
@@ -10,7 +18,7 @@ const Datasource = new DataSource({
     username: 'root',
     password: '',
     database: 'recycle',
-    entities: [User,Roles,UserAddress],
+    entities: [User,Roles,UserAddress,Cart,Discount,Order,OrderItems,Product,ProductCategory,ProductInventory,UserPayment],
     synchronize: true,
     logging: false,
 

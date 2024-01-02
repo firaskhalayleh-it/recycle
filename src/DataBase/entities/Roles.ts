@@ -11,9 +11,9 @@ export const ROLES = {
 @Entity()
 export class Roles extends BaseEntity{
     @PrimaryGeneratedColumn('increment')
-    id: string;
+    id: number;
 
-    @Column({nullable: true ,type:'enum', enum: ROLES, default: ROLES.USER})
+    @Column({nullable: true ,type:'enum', enum: ROLES, default: null})
     name: string;
 
  

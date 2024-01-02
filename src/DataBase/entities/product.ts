@@ -42,10 +42,10 @@ export class Product extends BaseEntity {
     @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date;
 
-    @Column({type:'timestamp'})
+    @Column()
     updated_at: Date;
 
-    @Column({type:'timestamp'})
+    @Column()
     deleted_at: Date;
 
 }
