@@ -21,17 +21,7 @@ export class Product extends BaseEntity {
     price: number;
 
     @ManyToMany(() => ProductCategory, category => category.products)
-    @JoinTable({
-        name: 'product_category',
-        joinColumn: {
-            name: 'product_id',
-            referencedColumnName: 'id'
-        },
-        inverseJoinColumn: {
-            name: 'category_id',
-            referencedColumnName: 'id'
-        }
-    })
+    @JoinTable()
     category: ProductCategory;
 
     @Column({ nullable: true })
