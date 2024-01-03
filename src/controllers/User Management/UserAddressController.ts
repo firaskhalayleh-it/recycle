@@ -10,7 +10,10 @@ export class UserAddressController {
     static async getUserAddresses(req: express.Request, res: express.Response) {
         try {
             const userAddress = await UserAddress.find();
-            res.send(userAddress);
+            if (userAddress.length === 0) {
+                res.send('no user address found');
+            } else {
+            res.send(userAddress);}
         } catch (error) {
             res.send(error);
         }
@@ -40,8 +43,8 @@ export class UserAddressController {
 
     static async createUserAddress(req: express.Request, res: express.Response) {
         try {
-            const { username, latitude, longitude, address, city, country, telephone, mobile } = req.body;
-            const user = await User.findOne({ where: { username } });
+            const { username, latitude, longitude, address, city, country } = req.body;
+            const user = await User.findOne({ where: { username:username } });
 
             if (!user) {
                 return res.status(404).send({ message: 'User not found' });
@@ -56,7 +59,9 @@ export class UserAddressController {
                 if(geoAddress.streetName && geoAddress.city && geoAddress.country){
                 userAddress.address = geoAddress.streetName;  
                 userAddress.city = geoAddress.city;          
-                userAddress.country = geoAddress.country;  
+                userAddress.country = geoAddress.country; 
+                user.userAddress = userAddress;
+                User.save(user); 
                 }else{
                     return res.status(400).send({ message: 'Invalid location' });
                 }
@@ -64,6 +69,8 @@ export class UserAddressController {
                 userAddress.address = address;
                 userAddress.city = city;
                 userAddress.country = country;
+                user.userAddress = userAddress;
+                User.save(user);
             } else {
                 return res.status(400).send({ message: 'Insufficient address data' });
             }
@@ -80,9 +87,12 @@ export class UserAddressController {
 
     static async updateUserAddress(req: express.Request, res: express.Response) {
         try {
-            const { username, latitude, longitude, address, city, country, telephone, mobile } = req.body;
-            const user = await User.findOne({ where: { username } });
-
+            const { username, latitude, longitude, address, city, country } = req.body;
+            const user = await User.findOne({ 
+                where: { username: username },
+                relations: ['userAddress'] // Make sure this is the correct relation name
+            });
+            
             if (!user) {
                 return res.status(404).send({ message: 'User not found' });
             }
@@ -97,45 +107,35 @@ export class UserAddressController {
                 userAddress.address = geoAddress.streetName;
                 userAddress.city = geoAddress.city;
                 userAddress.country = geoAddress.country;
+                user.userAddress = userAddress;
+                User.save(user);
                 }else{
                     return res.status(400).send({ message: 'Invalid location' });
                 }
             } else if (address && city && country) {
-                // Manually entered address
                 userAddress.address = address;
                 userAddress.city = city;
                 userAddress.country = country;
+                user.userAddress = userAddress;
+                User.save(user);
             } else {
+            
+                
                 return res.status(400).send({ message: 'Insufficient address data' });
             }
 
             await userAddress.save();
             res.send(userAddress);
         } catch (error) {
+            console.log(error);
             res.status(500).send({ message: 'Error updating user address', error });
         }
     }
     
-    static async deleteUserAddress(req: express.Request, res: express.Response) {
-        try {
-            const username = req.params.username;
-            const user = await User.findOne({ where: { username: username } });
-
-            if (!user) {
-                return res.status(404).send({ message: 'User not found' });
-            }
-
-            const userAddress = user.userAddress;
-            if (!userAddress) {
-                return res.status(404).send({ message: 'User address not found' });
-            }
-
-            await UserAddress.remove(userAddress);
-            res.status(200).send({ message: 'User address deleted successfully' });
-        } catch (error) {
-            res.status(500).send({ message: 'Error deleting user address', error });
-        }
-    }
+    
+    
+    
 }
 
     
+

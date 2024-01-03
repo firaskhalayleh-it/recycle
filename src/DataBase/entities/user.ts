@@ -30,8 +30,9 @@ export class User extends BaseEntity {
     @JoinColumn({ name: 'role_id' })
     role: Roles;
 
-    @OneToOne(() => UserAddress, userAddress => userAddress.user)
-    userAddress: UserAddress;
+    @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
+    @JoinColumn()
+    userAddress: UserAddress ;
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;

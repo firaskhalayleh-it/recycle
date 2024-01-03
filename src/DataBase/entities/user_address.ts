@@ -7,11 +7,8 @@ export class UserAddress extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(()=> User, {cascade: true})
-    @JoinColumn({
-        name: 'user_id',
-        referencedColumnName: 'id'
-    })
+    @OneToOne(()=> User,)
+    @JoinColumn()
     user: User;
 
     @Column({nullable: true})
