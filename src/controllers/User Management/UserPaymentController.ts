@@ -2,8 +2,8 @@ import { User } from "../../DataBase/entities/user";
 import { UserPayment } from "../../DataBase/entities/user_payment";
 import { Request, Response } from "express";
 
-export const UserPaymentController = () => {
-    const getUserPayments = async (req: Request, res: Response) => {
+export class UserPaymentController {
+    static getUserPayments = async (req: Request, res: Response) => {
         try {
             const userPayments = await UserPayment.find();
             res.status(200).json(userPayments);
@@ -12,7 +12,7 @@ export const UserPaymentController = () => {
         }
     }
 
-    const getUserPaymentByUsername = async (req: Request, res: Response) => {
+    static getUserPaymentByUsername = async (req: Request, res: Response) => {
         try {
             const username = req.params.username;
             if (!username) {
@@ -31,7 +31,7 @@ export const UserPaymentController = () => {
     }
 
 
-    const createUserPayment = async (req: Request, res: Response) => {
+    static createUserPayment = async (req: Request, res: Response) => {
         try {
             const { username, card_number, provider, expire_date, cvv } = req.body;
             if (!username) {
@@ -57,7 +57,7 @@ export const UserPaymentController = () => {
         }
     }
 
-    const updateUserPayment = async (req: Request, res: Response) => {
+    static updateUserPayment = async (req: Request, res: Response) => {
         try {
             const username = req.params.username;
             if (!username) {
@@ -83,29 +83,6 @@ export const UserPaymentController = () => {
         }
     }
 
-    const deleteUserPayment = async (req: Request, res: Response) => {
-        try {
-            const username = req.params.username;
-            if (!username) {
-                res.status(400).json({ message: 'username is required' });
-            }
-            const user = await User.findOne({ where: { username: username } });
-            if (!user) {
-                res.status(404).json({ message: 'user not found' });
-            }
-            else if (user) {
-                const userPayment = await UserPayment.findOne({ where: { userId: user.id } });
-                if (!userPayment) {
-                    res.status(404).json({ message: 'user payment not found' });
-                } else {
-                    await UserPayment.remove(userPayment);
-                    res.status(200).json({ message: 'user payment deleted successfully' });
-                }
-            }
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    }
-
+    
   
 }
