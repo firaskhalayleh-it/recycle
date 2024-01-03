@@ -21,17 +21,7 @@ export class ProductCategory extends BaseEntity {
     name: string;
 
     @ManyToMany(() => Product, product => product.category)
-    @JoinTable({
-        name: 'product_category',
-        joinColumn: {
-            name: 'category_id',
-            referencedColumnName: 'id'
-        },
-        inverseJoinColumn: {
-            name: 'product_id',
-            referencedColumnName: 'id'
-        }
-    })
+    @JoinTable()
     products: Product[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
