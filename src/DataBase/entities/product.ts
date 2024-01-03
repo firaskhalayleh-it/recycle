@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
-import { ProductInventory } from "./product_inventory";
 import { Discount } from "./discount";
 
 
@@ -25,12 +24,9 @@ export class Product extends BaseEntity {
     })
     category: ProductCategory;
     
-    @OneToOne(()=> ProductInventory, {cascade: true})
-    @JoinColumn({
-        name: 'inventory_id',
-        referencedColumnName: 'id'
-    })
-    inventory: ProductInventory;
+    @Column({ nullable: true })
+    quantity: number;
+
 
     @OneToOne(()=> Discount, {cascade: true})
     @JoinColumn({
@@ -38,6 +34,8 @@ export class Product extends BaseEntity {
         referencedColumnName: 'id'
     })
     discount: Discount;
+
+    
 
     @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date;

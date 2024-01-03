@@ -8,7 +8,6 @@ import { Order } from './entities/order';
 import { OrderItems } from './entities/order_items';
 import { Product } from './entities/product';
 import { ProductCategory } from './entities/product_category';
-import { ProductInventory } from './entities/product_inventory';
 import { UserPayment } from './entities/user_payment';
 
 const Datasource = new DataSource({
@@ -18,7 +17,7 @@ const Datasource = new DataSource({
     username: 'root',
     password: '',
     database: 'recycle',
-    entities: [User,Roles,UserAddress,Cart,Discount,Order,OrderItems,Product,ProductCategory,ProductInventory,UserPayment],
+    entities: [User,Roles,UserAddress,Cart,Discount,Order,OrderItems,Product,ProductCategory,UserPayment],
     synchronize: true,
     logging: false,
 
