@@ -2,12 +2,21 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "t
 import { Product } from "./product";
 
 
+export const productCategory = {
+    plastic : 'plastic',
+    wood : 'wood',
+    metal : 'metal',
+    glass : 'glass',
+    paper : 'paper',
+    other : 'other'
+}
+
 @Entity()
 export class ProductCategory extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'enum', enum: productCategory, default: productCategory.other })
     name: string;
 
     @Column({ nullable: true })
