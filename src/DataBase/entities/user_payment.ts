@@ -21,7 +21,7 @@ export class UserPayment extends BaseEntity{
     expire_date: string;
 
     @Column({nullable: true})
-    cvv: string;
+    cvv: number;
 
 
 }

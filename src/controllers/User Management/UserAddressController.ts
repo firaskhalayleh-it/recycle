@@ -20,6 +20,7 @@ export class UserAddressController {
     }
     static async getUserAddressByUsername(req: express.Request, res: express.Response) {
         try {
+            req.params.username = res.locals.jwtPayload.username;
             const username = req.params.username;
             const user = await User.findOne({ where: { username: username }, relations: ['userAddress'] });
 

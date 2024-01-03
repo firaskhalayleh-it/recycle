@@ -42,16 +42,19 @@ export class UserPaymentController {
                 res.status(404).json({ message: 'user not found' });
             }
 
-            const userPayment = new UserPayment();
             if (user && card_number && provider && expire_date && cvv) {
+                const userPayment = new UserPayment();
                 userPayment.userId = user.id;
                 userPayment.card_number = card_number;
                 userPayment.provider = provider;
                 userPayment.expire_date = expire_date;
                 userPayment.cvv = cvv;
+                await UserPayment.save(userPayment);
+                res.status(200).send(userPayment);
+            }else
+            {
+                res.status(400).json({ message: 'Invalid data' });
             }
-            const results = await UserPayment.save(userPayment);
-            res.status(200).json(results);
         } catch (error) {
             res.status(500).json(error);
         }
