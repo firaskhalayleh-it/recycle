@@ -3,18 +3,20 @@ import datasource from './DataBase/datasource.js';
 import router from './routes/UserRoutes.ts/UserRoute.js';
 import routerAddress from './routes/UserRoutes.ts/UserAddressRoute.js';
 import routerPayment from './routes/UserRoutes.ts/userPaymentRoutes.js';
+import productrouter from './routes/productRoutes/productRoute.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/api', router);
 app.use('/api', routerAddress);
 app.use('/api', routerPayment);
+app.use('/api', productrouter);
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     datasource.initilizeDB();
     console.log(`server is listening on port ${port}`);
 })

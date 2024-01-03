@@ -20,6 +20,7 @@ export class ProductController {
         }
     }
 
+    
     static getProductByName = async (req: express.Request, res: express.Response) => {
         try {
             const product = await Product.findOne({ where: { name: req.params.name } });

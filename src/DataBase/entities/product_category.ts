@@ -16,6 +16,7 @@ export class ProductCategory extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
+
     @Column({ nullable: true, type: 'enum', enum: productCategory, default: productCategory.other })
     name: string;
 
@@ -36,7 +37,7 @@ export class ProductCategory extends BaseEntity {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column({ type: 'timestamp'})
+    @Column()
     updated_at: Date;
 
     
