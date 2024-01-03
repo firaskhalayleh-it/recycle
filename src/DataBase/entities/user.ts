@@ -32,12 +32,12 @@ export class User extends BaseEntity {
 
     @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
     @JoinColumn()
-    userAddress: UserAddress ;
-    
+    userAddress: UserAddress;
+
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column({nullable:true}) 
+    @Column({ nullable: true })
     updated_at: Date;
 
 

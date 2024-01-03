@@ -11,20 +11,20 @@ export class Discount extends BaseEntity {
     @Column({ nullable: true })
     description: string;
 
-    @Column({ nullable: true, type:'decimal' })
+    @Column({ nullable: true, type: 'decimal' })
     discount_percent: number;
-        
 
-    @Column({  type:'boolean', default: true })
+
+    @Column({ type: 'boolean', default: true })
     active: boolean;
 
-    @Column({ nullable: true, type:'timestamp' })
+    @Column({ nullable: true, type: 'timestamp' })
     created_at: Date;
 
-    @Column({ nullable: true, type:'timestamp' })
+    @Column({ nullable: true, type: 'timestamp' })
     updated_at: Date;
 
-    @Column({ nullable: true, type:'timestamp' })
+    @Column({ nullable: true, type: 'timestamp' })
     deleted_at: Date;
 
 }

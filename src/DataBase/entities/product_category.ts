@@ -1,20 +1,22 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./product";
 
 
 @Entity()
-export class ProductCategory extends BaseEntity{
+export class ProductCategory extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     name: string;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     description: string;
 
-    
+    @OneToMany(() => Product, product => product.category)
+    products: Product[];
 
-    @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     @Column()
@@ -23,5 +25,5 @@ export class ProductCategory extends BaseEntity{
     @Column()
     deleted_at: Date;
 
-    
+
 }

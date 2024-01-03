@@ -17,19 +17,18 @@ const Datasource = new DataSource({
     username: 'root',
     password: '',
     database: 'recycle',
-    entities: [User,Roles,UserAddress,Cart,Discount,Order,OrderItems,Product,ProductCategory,UserPayment],
+    entities: [User, Roles, UserAddress, Cart, Discount, Order, OrderItems, Product, ProductCategory, UserPayment],
     synchronize: true,
     logging: false,
 
 });
 
-const initilizeDB = async () =>{
-    await Datasource.initialize().then(async ()=>{
+const initilizeDB = async () => {
+    await Datasource.initialize().then(async () => {
         console.log('database is connected');
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log(err);
     })
 }
 
-export default {Datasource, initilizeDB};
-    
+export default { Datasource, initilizeDB };

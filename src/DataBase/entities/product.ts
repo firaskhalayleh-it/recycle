@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
 
@@ -13,34 +13,34 @@ export class Product extends BaseEntity {
 
     @Column({ nullable: true })
     description: string;
-    
+
     @Column({ nullable: true })
     image: string;
 
-    @Column({ nullable: true, type:'decimal' })
+    @Column({ nullable: true, type: 'decimal' })
     price: number;
 
-    @OneToOne(()=> ProductCategory, {cascade: true})
+    @ManyToOne(() => ProductCategory, category => category.products)
     @JoinColumn({
         name: 'category_id',
         referencedColumnName: 'id'
     })
     category: ProductCategory;
-    
+
     @Column({ nullable: true })
     quantity: number;
 
 
-    @OneToOne(()=> Discount, {cascade: true})
+    @OneToOne(() => Discount, { cascade: true })
     @JoinColumn({
         name: 'discount_id',
         referencedColumnName: 'id'
     })
     discount: Discount;
 
-    
 
-    @Column({type:'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     @Column()
