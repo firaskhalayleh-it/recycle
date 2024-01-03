@@ -1,8 +1,8 @@
 import express from 'express';
 import datasource from './DataBase/datasource.js';
-import router from './routes/UserRoutes.ts/UserRoute.js';
-import routerAddress from './routes/UserRoutes.ts/UserAddressRoute.js';
-import routerPayment from './routes/UserRoutes.ts/userPaymentRoutes.js';
+import router from './routes/UserRoutes/UserRoute.js';
+import routerAddress from './routes/UserRoutes/UserAddressRoute.js';
+import routerPayment from './routes/UserRoutes/userPaymentRoutes.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
