@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "./product";
 
 
@@ -22,7 +22,18 @@ export class ProductCategory extends BaseEntity {
     @Column({ nullable: true })
     description: string;
 
-    @OneToMany(() => Product, product => product.category)
+    @ManyToMany(() => Product, product => product.category)
+    @JoinTable({
+        name: 'product_category',
+        joinColumn: {
+            name: 'category_id',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'product_id',
+            referencedColumnName: 'id'
+        }
+    })
     products: Product[];
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

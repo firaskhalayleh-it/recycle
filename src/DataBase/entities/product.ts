@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
 
@@ -15,15 +15,22 @@ export class Product extends BaseEntity {
     description: string;
 
     @Column({ nullable: true })
-    image: string;
+    image: Buffer;
 
     @Column({ nullable: true, type: 'decimal' })
     price: number;
 
-    @ManyToOne(() => ProductCategory, category => category.products)
-    @JoinColumn({
-        name: 'category_id',
-        referencedColumnName: 'id'
+    @ManyToMany(() => ProductCategory, category => category.products)
+    @JoinTable({
+        name: 'product_category',
+        joinColumn: {
+            name: 'product_id',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'category_id',
+            referencedColumnName: 'id'
+        }
     })
     category: ProductCategory;
 
