@@ -2,13 +2,17 @@ import express from 'express';
 import datasource from './DataBase/datasource.js';
 import router from './routes/UserRoutes.ts/UserRoute.js';
 import routerAddress from './routes/UserRoutes.ts/UserAddressRoute.js';
+import routerPayment from './routes/UserRoutes.ts/userPaymentRoutes.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+
 app.use('/api', router);
 app.use('/api', routerAddress);
+app.use('/api', routerPayment);
 
 app.listen(port, ()=>{
     datasource.initilizeDB();
