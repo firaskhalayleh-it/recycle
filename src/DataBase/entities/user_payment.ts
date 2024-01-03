@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 import { User } from "./user";
 import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
 
@@ -8,11 +8,8 @@ export class UserPayment extends BaseEntity{
     id: string;
 
     @OneToOne(()=> User, {cascade: true})
-    @JoinColumn({
-        name: 'user_id',
-        referencedColumnName: 'id'
-    })
-    user: User;
+    @JoinColumn()
+    userId: string;
 
     @Column({nullable: true})
     card_number: string;
