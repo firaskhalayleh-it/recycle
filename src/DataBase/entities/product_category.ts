@@ -3,12 +3,12 @@ import { Product } from "./product";
 
 
 export const productCategory = {
-    plastic : 'plastic',
-    wood : 'wood',
-    metal : 'metal',
-    glass : 'glass',
-    paper : 'paper',
-    other : 'other'
+    plastic: 'plastic',
+    wood: 'wood',
+    metal: 'metal',
+    glass: 'glass',
+    paper: 'paper',
+    other: 'other'
 }
 
 @Entity()
@@ -18,9 +18,6 @@ export class ProductCategory extends BaseEntity {
 
     @Column({ nullable: true, type: 'enum', enum: productCategory, default: productCategory.other })
     name: string;
-
-    @Column({ nullable: true })
-    description: string;
 
     @ManyToMany(() => Product, product => product.category)
     @JoinTable({
@@ -39,11 +36,10 @@ export class ProductCategory extends BaseEntity {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column()
+    @Column({ type: 'timestamp'})
     updated_at: Date;
 
-    @Column()
-    deleted_at: Date;
+    
 
 
 }
