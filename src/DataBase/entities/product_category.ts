@@ -12,6 +12,8 @@ export class ProductCategory extends BaseEntity{
     @Column({nullable: true})
     description: string;
 
+    
+
     @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     created_at: Date;
 
