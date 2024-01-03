@@ -136,4 +136,17 @@ export class ProductController {
         }
     }
 
+    static deleteProduct = async (req: express.Request, res: express.Response) => {
+        try {
+            const product = await Product.findOne({ where: { name: req.params.name } });
+            if (!product) {
+                return res.status(404).send({ message: 'Product not found' });
+            }
+            await Product.remove(product);
+            res.status(200).send({ message: 'Product deleted successfully' });
+        } catch (error) {
+            res.send(error);
+        }
+    }
+
 }
