@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
 
@@ -15,14 +15,14 @@ export class Product extends BaseEntity {
     description: string;
 
     @Column({ nullable: true })
-    image: Buffer;
+    image: string;
 
     @Column({ nullable: true, type: 'decimal' })
     price: number;
 
     @ManyToMany(() => ProductCategory, category => category.products)
-    @JoinTable()
-    category: ProductCategory;
+    @JoinTable() 
+    categories: ProductCategory[];
 
     @Column({ nullable: true })
     quantity: number;
@@ -34,7 +34,6 @@ export class Product extends BaseEntity {
         referencedColumnName: 'id'
     })
     discount: Discount;
-
 
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

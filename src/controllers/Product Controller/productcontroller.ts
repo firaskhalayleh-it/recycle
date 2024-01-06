@@ -1,23 +1,13 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import { Product } from '../../DataBase/entities/product';
-import { ProductCategory, productCategory } from '../../DataBase/entities/product_category';
+import { ProductCategory } from '../../DataBase/entities/product_category';
 
 
-const router = express.Router();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
 
-const upload = multer({ storage: storage });
+
 
 
 export class ProductController {
@@ -50,77 +40,51 @@ export class ProductController {
         try {
             const { name, description, price, quantity } = req.body;
             const uploaded = req.file;
+
+            if (!name || !description || !price || !quantity || !uploaded) {
+                return res.status(400).send('Please fill all the fields and upload an image');
+            }
+
             const product = new Product();
-            if (name && description && price && quantity && uploaded) {
-                product.name = name;
-                const fileToUpload = fs.readFileSync(uploaded.path);
-                const encodedFile = fileToUpload.toString('base64');
-                const file = Buffer.from(encodedFile, 'base64');
-                product.image = file;
-                product.description = description;
-                product.price = price;
-                product.quantity = quantity;
-            }
-            else {
-                return res.status(400).send({ message: 'Invalid data' });
+            product.name = name;
+            product.image = uploaded.path;
+            product.description = description;
+            product.price = price;
+            product.quantity = quantity;
+
+            // Determine category/categories from description
+            const categories = ['wood', 'metal', 'plastic', 'glass', 'fabric', 'paper', 'stone', 'other'];
+            let categoryNames = categories.filter(cat => description.includes(cat));
+
+            // If no specific category is found, default to 'other'
+            if (categoryNames.length === 0) {
+                categoryNames.push('other');
             }
 
-            if (description.includes('wood')) {
-                const category = await ProductCategory.findOne({ where: { name: 'wood' } });
-
+            // Find or create categories
+            const categoryEntities = [];
+            for (const categoryName of categoryNames) {
+                let category = await ProductCategory.findOne({ where: { name: categoryName } });
                 if (!category) {
-                    res.send('category not found');
-                } else if (category) {
-                    product.category = category;
+                    category = new ProductCategory();
+                    category.name = categoryName;
+                    await category.save();
                 }
-                await product.save();
-            }
-            else if (description.includes('metal')) {
-                const category = await ProductCategory.findOne({ where: { name: 'metal' } });
-                if (!category) {
-                    res.send('category not found');
-                } else if (category) {
-                    product.category = category;
-                }
-                await product.save();
-            }
-            else if (description.includes('plastic')) {
-                const category = await ProductCategory.findOne({ where: { name: 'plastic' } });
-
-                if (!category) {
-                    res.send('category not found');
-                } else if (category) {
-                    product.category = category;
-                }
-                await product.save();
-            }
-            else if (description.includes('glass')) {
-                const category = await ProductCategory.findOne({ where: { name: 'glass' } });
-                if (!category) {
-                    res.send('category not found');
-                } else if (category) {
-                    product.category = category;
-                }
-                await product.save();
-            }
-            else {
-                const category = await ProductCategory.findOne({ where: { name: 'other' } });
-                if (!category) {
-                    res.send('category not found');
-                } else if (category) {
-                    product.category = category;
-                }
-                await product.save();
+                categoryEntities.push(category);
             }
 
+            
+            // Assign categories to product
+            product.categories = categoryEntities;
 
-
-            await Product.save(product);
-            res.send(product);
+            await product.save();
+            res.status(200).send(product);
         } catch (error) {
-            res.send(error);
+            res.status(500).send(error);
         }
     }
+
+
 
     static updateProduct = async (req: express.Request, res: express.Response) => {
         try {

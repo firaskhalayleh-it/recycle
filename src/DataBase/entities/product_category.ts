@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "./product";
 
 
@@ -14,20 +14,19 @@ export const productCategory = {
 @Entity()
 export class ProductCategory extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
-    id: number;
+        id: number;
 
-
-    @Column({ nullable: true, type: 'enum', enum: productCategory, default: productCategory.other })
-    name: string;
-
-    @ManyToMany(() => Product, product => product.category)
-    @JoinTable()
+    @Column({nullable: true})
+        name: string;
+        
+    @ManyToMany(() => Product, product => product.categories)
     products: Product[];
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
 
-    @Column()
+        @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+        created_at: Date;
+
+    @Column({nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     updated_at: Date;
 
     

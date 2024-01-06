@@ -1,9 +1,9 @@
 import express from 'express';
-import datasource from './DataBase/datasource.js';
-import router from './routes/UserRoutes/UserRoute.js';
-import routerAddress from './routes/UserRoutes/UserAddressRoute.js';
-import routerPayment from './routes/UserRoutes/userPaymentRoutes.js';
-import ProductRoute from './routes/Product Routes/ProductRoute.js';
+import datasource from './DataBase/datasource';
+import router from './routes/UserRoutes/UserRoute';
+import routerAddress from './routes/UserRoutes/UserAddressRoute';
+import routerPayment from './routes/UserRoutes/userPaymentRoutes';
+import ProductRoute from './routes/Product Routes/ProductRoute';
 const app = express();
 const port = process.env.PORT || 3000;
 
