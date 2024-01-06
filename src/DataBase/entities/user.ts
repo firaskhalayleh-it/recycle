@@ -1,7 +1,8 @@
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Roles } from './Roles';
 import { UserAddress } from './user_address';
+import { Product } from './product';
 
 @Entity()
 export class User extends BaseEntity {
@@ -25,6 +26,10 @@ export class User extends BaseEntity {
 
     @Column({ nullable: false })
     telephone: string;
+
+    @OneToMany(() => Product, product => product.provider)
+    @JoinColumn({ name: 'products_id', referencedColumnName: 'id' })
+    products: Product[];
 
     @ManyToOne(() => Roles, role => role.users)
     @JoinColumn({ name: 'role_id' })

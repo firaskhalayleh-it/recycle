@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
+import { User } from "./user";
 
 
 @Entity()
@@ -35,14 +36,20 @@ export class Product extends BaseEntity {
     })
     discount: Discount;
 
+    @ManyToOne(()=>User, user=>user.id ,{ eager:true, nullable:true,})
+    @JoinColumn({
+        name: 'provider_id',
+        referencedColumnName: 'id'
+    })
+    provider: User;
+
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
+
     @Column()
     updated_at: Date;
 
-    @Column()
-    deleted_at: Date;
-
+   
 }

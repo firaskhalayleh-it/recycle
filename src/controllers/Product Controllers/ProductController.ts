@@ -3,6 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import { Product } from '../../DataBase/entities/product';
 import { ProductCategory } from '../../DataBase/entities/product_category';
+import { User } from '../../DataBase/entities/user';
+import { ROLES } from '../../DataBase/entities/Roles';
 
 
 
@@ -38,10 +40,10 @@ export class ProductController {
 
     static createProduct = async (req: express.Request, res: express.Response) => {
         try {
-            const { name, description, price, quantity } = req.body;
+            const { name, description, price, quantity, provider } = req.body;
             const uploaded = req.file;
 
-            if (!name || !description || !price || !quantity || !uploaded) {
+            if (!name || !description || !price || !quantity || !uploaded || !provider) {
                 return res.status(400).send('Please fill all the fields and upload an image');
             }
 
@@ -51,17 +53,23 @@ export class ProductController {
             product.description = description;
             product.price = price;
             product.quantity = quantity;
+            const roleOfProvider = await User.findOne({ where: { username: provider } });
+            if (!roleOfProvider) {
+                res.status(404).send({ message: 'Provider not found' });
+            }
+            if (roleOfProvider) {
 
-            // Determine category/categories from description
+                product.provider = roleOfProvider;
+            }
+
+
             const categories = ['wood', 'metal', 'plastic', 'glass', 'fabric', 'paper', 'stone', 'other'];
             let categoryNames = categories.filter(cat => description.includes(cat));
 
-            // If no specific category is found, default to 'other'
             if (categoryNames.length === 0) {
                 categoryNames.push('other');
             }
 
-            // Find or create categories
             const categoryEntities = [];
             for (const categoryName of categoryNames) {
                 let category = await ProductCategory.findOne({ where: { name: categoryName } });
@@ -77,8 +85,11 @@ export class ProductController {
             product.categories = categoryEntities;
 
             await product.save();
+            console.log('Saved product:', product);
+
             res.status(200).send(product);
         } catch (error) {
+            console.error('Error saving product:', error);
             res.status(500).send(error);
         }
     }
@@ -95,8 +106,7 @@ export class ProductController {
             if (!product) {
                 return res.status(404).send({ message: 'Product not found' });
             }
-          
-            product.deleted_at = new Date();
+
             await Product.remove(product);
             res.status(200).send({ message: 'Product deleted successfully' });
         } catch (error) {

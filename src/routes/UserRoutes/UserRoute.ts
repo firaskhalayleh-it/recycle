@@ -21,4 +21,9 @@ router.delete('/users/:username', UserController.deleteUser);
 // Route to login
 router.post('/users/login', UserController.Login);
 
+router.post('/users/logout', UserController.Logout);
+
+router.post('/users/showProducts',UserController.UserProducts);
+
+
 export default router;

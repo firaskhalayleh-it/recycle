@@ -20,9 +20,11 @@ const Datasource = new DataSource({
     entities: [User, Roles, UserAddress, Cart, Discount, Order, OrderItems, Product, ProductCategory, UserPayment],
     synchronize: true,
     logging: false,
-    dropSchema: true
+    dropSchema:false
+    
 
 });
+
 
 const initilizeDB = async () => {
     await Datasource.initialize().then(async () => {

@@ -14,22 +14,22 @@ export const productCategory = {
 @Entity()
 export class ProductCategory extends BaseEntity {
     @PrimaryGeneratedColumn('increment')
-        id: number;
+    id: number;
 
-    @Column({nullable: true})
-        name: string;
-        
+    @Column({ nullable: true })
+    name: string;
+
     @ManyToMany(() => Product, product => product.categories)
     products: Product[];
+    
 
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
 
-        @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-        created_at: Date;
-
-    @Column({nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    @Column({ nullable: true, type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 
-    
+
 
 
 }
