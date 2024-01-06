@@ -73,8 +73,7 @@ export class ProductController {
                 categoryEntities.push(category);
             }
 
-            
-            // Assign categories to product
+
             product.categories = categoryEntities;
 
             await product.save();
@@ -86,26 +85,18 @@ export class ProductController {
 
 
 
-    static updateProduct = async (req: express.Request, res: express.Response) => {
-        try {
-            const product = await Product.findOne({ where: { name: req.params.name } });
-            if (!product) {
-                return res.status(404).send({ message: 'Product not found' });
-            }
-            Object.assign(product, req.body);
-            await product.save();
-            res.send(product);
-        } catch (error) {
-            res.send(error);
-        }
-    }
-
     static deleteProduct = async (req: express.Request, res: express.Response) => {
         try {
-            const product = await Product.findOne({ where: { name: req.params.name } });
+            const { name } = req.body;
+            if (!name) {
+                return res.status(400).send('Please provide a name');
+            }
+            const product = await Product.findOne({ where: { name: name } });
             if (!product) {
                 return res.status(404).send({ message: 'Product not found' });
             }
+          
+            product.deleted_at = new Date();
             await Product.remove(product);
             res.status(200).send({ message: 'Product deleted successfully' });
         } catch (error) {

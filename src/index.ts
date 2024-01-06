@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', router);
 app.use('/api', routerAddress);
 app.use('/api', routerPayment);
-app.use('/api', ProductRoute)
+app.use('/api', ProductRoute);
 
 app.listen(port, () => {
     datasource.initilizeDB();

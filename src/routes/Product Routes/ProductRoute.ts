@@ -14,10 +14,7 @@ router.get('/products/:name', ProductController.getProductByName);
 // Create a new product
 router.post('/products', upload.single('image'), ProductController.createProduct);
 
-// Update a product
-router.put('/products/:name', ProductController.updateProduct);
-
 // Delete a product
-router.delete('/products/:name', ProductController.deleteProduct);
+router.delete('/products', ProductController.deleteProduct);
 
 export default router;
