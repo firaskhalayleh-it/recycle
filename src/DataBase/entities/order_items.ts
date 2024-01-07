@@ -20,11 +20,11 @@ export class OrderItems extends BaseEntity {
         name: 'product_id',
         referencedColumnName: 'id'
     })
-    product: Product;
+    product: Product[];
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: 'int' })
     quantity: number;
-
+    
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
