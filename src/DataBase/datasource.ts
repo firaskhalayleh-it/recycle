@@ -2,7 +2,6 @@ import typeorm, { BaseEntity, DataSource, Entity } from 'typeorm';
 import { User } from './entities/user';
 import { Roles } from './entities/Roles';
 import { UserAddress } from './entities/user_address';
-import { Cart } from './entities/cart';
 import { Discount } from './entities/discount';
 import { Order } from './entities/order';
 import { OrderItems } from './entities/order_items';
@@ -17,10 +16,10 @@ const Datasource = new DataSource({
     username: 'root',
     password: '',
     database: 'recycle',
-    entities: [User, Roles, UserAddress, Cart, Discount, Order, OrderItems, Product, ProductCategory, UserPayment],
+    entities: [User, Roles, UserAddress, Discount, Order, OrderItems, Product, ProductCategory, UserPayment],
     synchronize: true,
     logging: false,
-    dropSchema:false
+    dropSchema:false                                                                                                                                                                                                                                                                                                    
     
 
 });

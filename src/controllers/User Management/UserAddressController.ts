@@ -13,7 +13,8 @@ export class UserAddressController {
             if (userAddress.length === 0) {
                 res.send('no user address found');
             } else {
-            res.send(userAddress);}
+                res.send(userAddress);
+            }
         } catch (error) {
             res.send(error);
         }
@@ -39,61 +40,67 @@ export class UserAddressController {
         }
     }
 
- 
+
 
 
     static async createUserAddress(req: express.Request, res: express.Response) {
         try {
-            const { username, latitude, longitude, address, city, country } = req.body;
-            const user = await User.findOne({ where: { username:username } });
+            const { latitude, longitude, address, city, country } = req.body;
+            const username = req.cookies.username;
+            if (!username) {
+                return res.status(400).send({ message: 'username is required' });
+            }
+            const user = await User.findOne({ where: { username: username } });
 
             if (!user) {
                 return res.status(404).send({ message: 'User not found' });
             }
 
-            const userAddress = new UserAddress();
+            let userAddress = new UserAddress();
 
             if (latitude && longitude) {
                 const geocoder = NodeGeocoder({ provider: 'openstreetmap' }); // Or your chosen provider
                 const geoResponse = await geocoder.reverse({ lat: latitude, lon: longitude });
                 const geoAddress = geoResponse[0];
-                if(geoAddress.streetName && geoAddress.city && geoAddress.country){
-                userAddress.address = geoAddress.streetName;  
-                userAddress.city = geoAddress.city;          
-                userAddress.country = geoAddress.country; 
-                user.userAddress = userAddress;
-                User.save(user); 
-                }else{
+                if (geoAddress.streetName && geoAddress.city && geoAddress.country) {
+                    userAddress.address = geoAddress.streetName;
+                    userAddress.city = geoAddress.city;
+                    userAddress.country = geoAddress.country;
+                } else {
                     return res.status(400).send({ message: 'Invalid location' });
                 }
             } else if (address && city && country) {
                 userAddress.address = address;
                 userAddress.city = city;
                 userAddress.country = country;
-                user.userAddress = userAddress;
-                User.save(user);
             } else {
                 return res.status(400).send({ message: 'Insufficient address data' });
             }
 
-            
             userAddress.user = user;
 
+            // Save user address
             await userAddress.save();
+
+            // Update user with new address (if necessary)
+            user.userAddress = userAddress;
+            await user.save();
+
             res.send(userAddress);
         } catch (error) {
             res.status(500).send({ message: 'Error creating user address', error });
+            console.log`Error creating user address: ${error}`;
         }
     }
 
     static async updateUserAddress(req: express.Request, res: express.Response) {
         try {
             const { username, latitude, longitude, address, city, country } = req.body;
-            const user = await User.findOne({ 
+            const user = await User.findOne({
                 where: { username: username },
                 relations: ['userAddress'] // Make sure this is the correct relation name
             });
-            
+
             if (!user) {
                 return res.status(404).send({ message: 'User not found' });
             }
@@ -101,16 +108,16 @@ export class UserAddressController {
             const userAddress = user.userAddress;
 
             if (latitude && longitude) {
-                const geocoder = NodeGeocoder({ provider: 'google' }); 
+                const geocoder = NodeGeocoder({ provider: 'google' });
                 const geoResponse = await geocoder.reverse({ lat: latitude, lon: longitude });
                 const geoAddress = geoResponse[0];
-                if(geoAddress.streetName && geoAddress.city && geoAddress.country){
-                userAddress.address = geoAddress.streetName;
-                userAddress.city = geoAddress.city;
-                userAddress.country = geoAddress.country;
-                user.userAddress = userAddress;
-                User.save(user);
-                }else{
+                if (geoAddress.streetName && geoAddress.city && geoAddress.country) {
+                    userAddress.address = geoAddress.streetName;
+                    userAddress.city = geoAddress.city;
+                    userAddress.country = geoAddress.country;
+                    user.userAddress = userAddress;
+                    User.save(user);
+                } else {
                     return res.status(400).send({ message: 'Invalid location' });
                 }
             } else if (address && city && country) {
@@ -120,8 +127,8 @@ export class UserAddressController {
                 user.userAddress = userAddress;
                 User.save(user);
             } else {
-            
-                
+
+
                 return res.status(400).send({ message: 'Insufficient address data' });
             }
 
@@ -132,11 +139,11 @@ export class UserAddressController {
             res.status(500).send({ message: 'Error updating user address', error });
         }
     }
-    
-    
-    
-    
+
+
+
+
 }
 
-    
+
 

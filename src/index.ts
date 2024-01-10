@@ -5,6 +5,8 @@ import routerAddress from './routes/UserRoutes/UserAddressRoute';
 import routerPayment from './routes/UserRoutes/userPaymentRoutes';
 import ProductRoute from './routes/Product Routes/ProductRoute';
 import orderRouter from './routes/Order Routes/OrderItemRoute';
+import orderITemsRouter from './routes/Order Routes/OrderItemsRoute';
+
 import cookieParser from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +20,7 @@ app.use('/api', routerAddress);
 app.use('/api', routerPayment);
 app.use('/api', ProductRoute);
 app.use('/api', orderRouter);
+app.use('/api', orderITemsRouter);
 
 
  app.listen (port, () => {

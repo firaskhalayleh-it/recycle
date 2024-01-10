@@ -1,9 +1,8 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user";
-import { Cart } from "./cart";
 import { UserPayment } from "./user_payment";
-import { OrderItems } from "./order_items";
 import { Product } from "./product";
+import { OrderItems } from "./order_items";
 
 @Entity()
 export class Order extends BaseEntity {
@@ -21,10 +20,9 @@ export class Order extends BaseEntity {
     @JoinColumn()
     product: Product;
 
-    @ManyToOne(() => OrderItems, { cascade: true ,nullable:true})
-    @JoinColumn()
-    order_items: OrderItems;
-
+ 
+    @ManyToOne(() => OrderItems, orderItems => orderItems.order)
+    orderItems: OrderItems;
     
 
     @Column({ nullable: true })

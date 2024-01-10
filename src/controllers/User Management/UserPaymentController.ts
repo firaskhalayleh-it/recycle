@@ -37,7 +37,7 @@ export class UserPaymentController {
             const username = req.cookies.username;
             const { card_number, provider, expire_date, cvv } = req.body;
             if (!username) {
-                res.status(400).json({ message: 'username is required' });
+                res.status(400).json({ message: 'you must login first!' });
             }
             const user = await User.findOne({ where: { username: username } });
             if (!user) {
@@ -64,9 +64,9 @@ export class UserPaymentController {
 
     static updateUserPayment = async (req: Request, res: Response) => {
         try {
-            const username = req.params.username;
+            const username = req.cookies.username;
             if (!username) {
-                res.status(400).json({ message: 'username is required' });
+                res.status(400).json({ message: 'you must login first!' });
             }
             const user = await User.findOne({ where: { username: username }, relations: ['userPayment'] });
             if (!user) {
