@@ -7,9 +7,9 @@ export class UserPayment extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => User, { cascade: true })
+    @OneToOne(() => User,{eager:true})
     @JoinColumn()
-    userId: string;
+    userId: Relation<User>;
 
     @Column({ nullable: true })
     card_number: string;

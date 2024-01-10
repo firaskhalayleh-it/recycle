@@ -1,3 +1,4 @@
+import { Order } from "../../DataBase/entities/order";
 import { User } from "../../DataBase/entities/user";
 import { UserPayment } from "../../DataBase/entities/user_payment";
 import { Request, Response } from "express";
@@ -23,7 +24,7 @@ export class UserPaymentController {
                 return res.status(404).json({ message: 'user not found' });
             }
 
-            const userPayment = await UserPayment.find({ where: { userId: user.id } });
+            const userPayment = await UserPayment.find({ where: { userId: {username : username} } });
             res.status(200).json(userPayment);
         } catch (error) {
             res.status(500).json(error);
@@ -33,7 +34,8 @@ export class UserPaymentController {
 
     static createUserPayment = async (req: Request, res: Response) => {
         try {
-            const { username, card_number, provider, expire_date, cvv } = req.body;
+            const username = req.cookies.username;
+            const { card_number, provider, expire_date, cvv } = req.body;
             if (!username) {
                 res.status(400).json({ message: 'username is required' });
             }
@@ -44,7 +46,7 @@ export class UserPaymentController {
 
             if (user && card_number && provider && expire_date && cvv) {
                 const userPayment = new UserPayment();
-                userPayment.userId = user.id;
+                userPayment.userId = user;
                 userPayment.card_number = card_number;
                 userPayment.provider = provider;
                 userPayment.expire_date = expire_date;
@@ -72,7 +74,7 @@ export class UserPaymentController {
             }
             else if (user) {
 
-                const userPayment = await UserPayment.findOne({ where: { userId: user.id } });
+                const userPayment = await UserPayment.findOne({ where: { userId: {username : username} } });
                 if (!userPayment) {
                     res.status(404).json({ message: 'user payment not found' });
                 } else {
@@ -85,6 +87,8 @@ export class UserPaymentController {
             res.status(500).json(error);
         }
     }
+
+    
 
     
 

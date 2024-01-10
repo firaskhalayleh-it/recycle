@@ -19,8 +19,9 @@ app.use('/api', routerPayment);
 app.use('/api', ProductRoute);
 app.use('/api', orderRouter);
 
-app.listen(port, () => {
-    datasource.initilizeDB();
+
+ app.listen (port, () => {
+     datasource.initilizeDB();
     console.log(`server is listening on port ${port}`);
 })
 

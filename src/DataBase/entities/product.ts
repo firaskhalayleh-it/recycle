@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOn
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
 import { User } from "./user";
+import { Order } from "./order";
 
 
 @Entity()
@@ -43,6 +44,12 @@ export class Product extends BaseEntity {
     })
     provider: User;
 
+    @OneToOne(()=>Order,{ eager:true, nullable:true})
+    @JoinColumn({
+        name: 'order_id',
+        referencedColumnName: 'id'
+    })
+    order: Order;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;

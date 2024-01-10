@@ -3,51 +3,55 @@ import bcrypt from 'bcrypt';
 import { Roles } from './Roles';
 import { UserAddress } from './user_address';
 import { Product } from './product';
+import { Order } from './order';
 
 @Entity()
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ nullable: false })
-    username: string;
+  @Column({ nullable: false })
+  username: string;
 
-    @Column({ nullable: false })
-    password: string;
+  @Column({ nullable: false })
+  password: string;
 
-    @Column({ nullable: false })
-    first_name: string;
+  @Column({ nullable: false })
+  first_name: string;
 
-    @Column({ nullable: false })
-    last_name: string;
+  @Column({ nullable: false })
+  last_name: string;
 
-    @Column({ nullable: false })
-    email: string;
+  @Column({ nullable: false })
+  email: string;
 
-    @Column({ nullable: false })
-    telephone: string;
+  @Column({ nullable: false })
+  telephone: string;
 
-    @OneToMany(() => Product, product => product.provider)
-    @JoinColumn({ name: 'products_id', referencedColumnName: 'id' })
-    products: Product[];
+  @OneToMany(() => Order, order => order.customer, { nullable: true })
+  orders: Order[];
 
-    @ManyToOne(() => Roles, role => role.users)
-    @JoinColumn({ name: 'role_id' })
-    role: Roles;
+  @OneToMany(() => Product, product => product.provider)
+  @JoinColumn({ name: 'products_id', referencedColumnName: 'id' })
+  products: Product[];
 
-    @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
-    @JoinColumn()
-    userAddress: UserAddress;
+  @ManyToOne(() => Roles, role => role.users)
+  @JoinColumn({ name: 'role_id' })
+  role: Roles;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
+  @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
+  @JoinColumn()
+  userAddress: UserAddress;
 
-    @Column({ nullable: true })
-    updated_at: Date;
+  @Column({ type: 'timestamp'})
+  created_at: Date;
+
+  @Column({ nullable: true })
+  updated_at: Date;
 
 
-    @BeforeInsert()
-    encryptPassword() {
-        this.password = bcrypt.hashSync(this.password, 10);
-    }
+  @BeforeInsert()
+  encryptPassword() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
 }

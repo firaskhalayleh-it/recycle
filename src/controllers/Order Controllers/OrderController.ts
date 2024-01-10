@@ -1,72 +1,116 @@
-import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import { Order } from '../../DataBase/entities/order';
-import { Product } from '../../DataBase/entities/product';
-import { UserPayment } from '../../DataBase/entities/user_payment';
+import { Request, Response } from "express";
+import { User } from "../../DataBase/entities/user";
+import { UserPayment } from "../../DataBase/entities/user_payment";
+import { Order } from "../../DataBase/entities/order";
+import { Product } from "../../DataBase/entities/product";
 
-export class OrderItemController {
-    static getAllOrderItemsByUsername = async (req: Request, res: Response) => {
+
+
+
+export class OrderController {
+
+    static getOrdersByUsername = async (req: Request, res: Response) => {
         try {
             const username = req.cookies.username;
-            const orderItems = await Order.find({ where: { customer: username } });
-            res.status(200).json(orderItems);
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    }
-
-    static createOrderItemOrUpdate = async (req: Request, res: Response) => {
-       
-        try {
-            const { product_name, quantity } = req.body;
-            const username = req.cookies.username;
-            if (!username || !product_name || !quantity) {
-                return res.status(400).json({ message: ' product name, quantity are required' });
-            }
-            const userPayment = await UserPayment.findOne({ where: { userId:username } });
-            if (!userPayment) {
-                return res.status(404).json({ message: 'user payment not found' });
-            }
-            const product = await Product.findOne({ where: { name: product_name } });
-            if (!product) {
-                return res.status(404).json({ message: 'product not found' });
-            }
-            const orderItem = await Order.findOne({ where: { customer: username, product: { name: product_name } } });
-            if (orderItem) {
-                orderItem.quantity = quantity;
-                orderItem.payment_id = userPayment;
-                await Order.save(orderItem);
-                res.status(200).json(orderItem);
-            } else {
-                const newOrderItem = new Order();
-                newOrderItem.customer = username;
-                newOrderItem.product = product;
-                newOrderItem.quantity = quantity;
-                newOrderItem.payment_id = userPayment;
-                await Order.save(newOrderItem);
-                res.status(200).json(newOrderItem);
-            }
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    }
-
-   
-
-    static deleteOrderItem = async (req: Request, res: Response) => {
-        try {
-            const { username } = req.cookies.username;
             if (!username) {
-                return res.status(400).json({ message: 'please login first!' });
+                return res.status(400).send({ message: 'username is required' }); // Add a return statement here
             }
-            const orderItem = await Order.findOne({ where: { customer:username } });
-            if (!orderItem) {
-                return res.status(404).json({ message: 'order item not found' });
+            const user = await User.findOne({ where: { username: username } });
+            if (!user) {
+                return res.status(404).send({ message: 'user not found' }); // Add a return statement here
+            } else {
+                const orders = await Order.find({ where: { customer: { id: user.id } } });
+                if (orders.length === 0) {
+                    return res.status(404).send({ message: 'orders not found' }); // Add a return statement here
+                }
+                return res.status(200).send(orders); // Add a return statement here
             }
-            await Order.remove(orderItem);
-            res.status(200).json({ message: 'order item deleted successfully' });
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).send(error); // Add a return statement here
+        }
+    }
+
+    static createOrderItem = async (req: Request, res: Response) => {
+
+        try {
+            const username = req.cookies.username;
+            const { productName, quantity } = req.body;
+            if (!username) {
+                res.status(400).send({ message: 'username is required' });
+            }
+            const product = await Product.findOne({ where: { name: productName } });
+            if (!product) {
+                res.status(404).send({ message: 'product not found' });
+            } else if (product) {
+
+                if (product.quantity < quantity || product.quantity === 0) {
+                    res.status(400).send({ message: 'not enough quantity or its out of stock' });
+                }
+
+
+                const user = await User.findOne({ where: { username: username } });
+                if (user) {
+                    const payment = await UserPayment.findOne({ where: { userId: { username: username } } });
+                    if (!payment) {
+                        res.status(404).send({ message: 'payment not found' });
+                    } else {
+                        const orderItem = new Order();
+
+                        orderItem.customer = user;
+                        orderItem.product = product;
+                        orderItem.quantity = quantity;
+                        orderItem.total = product.price * quantity;
+                        orderItem.status = 'pending';
+                        product.quantity = product.quantity - quantity;
+                        await Product.save(product);
+                        await Order.save(orderItem);
+                        res.cookie('order', orderItem.id);
+                        res.status(200).send({ message: 'order created successfully' });
+                    }
+                } else {
+                    res.status(404).send({ message: 'user not found' });
+                }
+
+            }
+        } catch (error) {
+            res.status(500).send(error);
+            console.log(error);
+        }
+
+    }
+    static updateOrderItem = async (req: Request, res: Response) => {
+        try {
+            const orderId = req.cookies.order;
+            const { quantity, status } = req.body;
+            if (!orderId) {
+                res.status(400).send({ message: 'orderId is required' });
+            }
+            const order = await Order.findOne({
+                where: { id: orderId },
+                relations: ["product"]  // Include this line to load the product with the order
+            });
+            if (!order) {
+                res.status(404).send({ message: 'order not found' });
+            } else if (order) {
+                order.updated_at = new Date();
+                const oldquantity = order.quantity;
+                order.quantity = quantity;
+                order.product.quantity = order.product.quantity - quantity + oldquantity;
+                order.total = order.product.price * quantity;
+
+                await Product.save(order.product);
+
+
+                order.status = status;
+
+
+
+                await Order.save(order);
+                res.status(200).send({ message: 'order updated successfully' });
+            }
+        } catch (error) {
+            res.status(500).send(error);
+            console.log(error);
         }
     }
 }
