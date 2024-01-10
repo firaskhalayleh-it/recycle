@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { User } from "../../DataBase/entities/user";
-import { UserPayment } from "../../DataBase/entities/user_payment";
 import { Order } from "../../DataBase/entities/order";
 import { Product } from "../../DataBase/entities/product";
 
@@ -50,10 +49,7 @@ export class OrderController {
 
                 const user = await User.findOne({ where: { username: username } });
                 if (user) {
-                    const payment = await UserPayment.findOne({ where: { userId: { username: username } } });
-                    if (!payment) {
-                        res.status(404).send({ message: 'payment not found' });
-                    } else {
+                    
                         const orderItem = new Order();
 
                         orderItem.customer = user;
@@ -66,7 +62,7 @@ export class OrderController {
                         await Order.save(orderItem);
                         res.cookie('order', orderItem.id);
                         res.status(200).send({ message: 'order created successfully' });
-                    }
+                    
                 } else {
                     res.status(404).send({ message: 'user not found' });
                 }
