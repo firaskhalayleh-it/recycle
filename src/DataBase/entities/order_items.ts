@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order";
 import { Product } from "./product";
 
@@ -8,22 +8,12 @@ export class OrderItems extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => Order, { cascade: true })
+    @OneToMany(() => Order, order => order.id)
     @JoinColumn({
         name: 'order_id',
         referencedColumnName: 'id'
     })
-    order: Order;
-
-    @OneToOne(() => Product, { cascade: true })
-    @JoinColumn({
-        name: 'product_id',
-        referencedColumnName: 'id'
-    })
-    product: Product[];
-
-    @Column({ nullable: true, type: 'int' })
-    quantity: number;
+    order: Order[];
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;

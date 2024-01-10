@@ -21,6 +21,10 @@ export class Order extends BaseEntity {
     @JoinColumn()
     product: Product;
 
+    @ManyToOne(() => OrderItems, { cascade: true ,nullable:true})
+    @JoinColumn()
+    order_items: OrderItems;
+
     
 
     @Column({ nullable: true })
