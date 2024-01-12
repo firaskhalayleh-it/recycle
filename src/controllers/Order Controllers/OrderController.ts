@@ -51,7 +51,8 @@ export class OrderController {
                 if (user) {
                     
                         const orderItem = new Order();
-
+                        const isOutOfStock = orderItem.product.isOutOfStock;
+                        if(isOutOfStock()){
                         orderItem.customer = user;
                         orderItem.product = product;
                         orderItem.quantity = quantity;
@@ -62,6 +63,9 @@ export class OrderController {
                         await Order.save(orderItem);
                         res.cookie('order', orderItem.id);
                         res.status(200).send({ message: 'order created successfully' });
+                        }else{
+                            res.status(400).send({ message: 'out of stock' });
+                        }
                     
                 } else {
                     res.status(404).send({ message: 'user not found' });

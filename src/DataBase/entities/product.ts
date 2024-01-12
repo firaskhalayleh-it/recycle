@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { ProductCategory } from "./product_category";
 import { Discount } from "./discount";
 import { User } from "./user";
@@ -51,12 +51,23 @@ export class Product extends BaseEntity {
     })
     order: Order;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     created_at: Date;
 
-
-    @Column()
+    @UpdateDateColumn()
     updated_at: Date;
+
+    getDiscountedPrice() {
+        if (this.discount && this.discount.active) {
+            const discountAmount = this.price * (this.discount.discount_percent / 100);
+            return this.price - discountAmount;
+        }
+        return this.price; 
+    }
+
+    isOutOfStock() {
+        return this.quantity <= 0;
+    }
 
    
 }

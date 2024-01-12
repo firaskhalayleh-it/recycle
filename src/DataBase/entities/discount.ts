@@ -1,25 +1,39 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { 
+    BaseEntity, 
+    Column, 
+    Entity, 
+    PrimaryGeneratedColumn, 
+    CreateDateColumn, 
+    UpdateDateColumn, 
+    DeleteDateColumn,
+    OneToOne
+} from "typeorm";
+import { Product } from "./product";
 
 @Entity()
 export class Discount extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-    
 
     @Column({ nullable: true, type: 'decimal' })
     discount_percent: number;
 
-
     @Column({ type: 'boolean', default: true })
     active: boolean;
 
-    @Column({ nullable: true, type: 'timestamp' })
+    @CreateDateColumn()
     created_at: Date;
 
-    @Column({ nullable: true, type: 'timestamp' })
+    @UpdateDateColumn()
     updated_at: Date;
 
-    @Column({ nullable: true, type: 'timestamp' })
+    @DeleteDateColumn()
     deleted_at: Date;
 
+    @OneToOne(() => Product)
+    product: Product;
+
+    isActive() {
+        return this.active && !this.deleted_at;
+    }
 }
