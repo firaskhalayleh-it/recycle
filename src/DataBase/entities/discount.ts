@@ -30,6 +30,12 @@ export class Discount extends BaseEntity {
     @DeleteDateColumn()
     deleted_at: Date;
 
+    @Column({ nullable: true })
+    start_date: Date;
+
+    @Column({ nullable: true })
+    end_date: Date;
+
     @OneToOne(() => Product)
     product: Product;
 
