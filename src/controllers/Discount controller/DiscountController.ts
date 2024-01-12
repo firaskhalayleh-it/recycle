@@ -5,7 +5,7 @@ import { Roles, ROLES } from '../../DataBase/entities/Roles';
 import { Discount } from '../../DataBase/entities/discount';
 
 class DiscountController {
-    async validateDiscount(req: Request, res: Response) {
+    async AddDiscount(req: Request, res: Response) {
         const username = req.cookies.username;
 
         const discount_percent = req.body.discount;
@@ -34,9 +34,6 @@ class DiscountController {
         discount.end_date.setDate(discount.end_date.getDate() + 7);
         await Discount.save(discount);
 
-
-
-
         res.send('Discount validated successfully.');
     }
 
@@ -63,7 +60,7 @@ class DiscountController {
     private async isUserSeller(user: User) {
         if (user.role.name === ROLES.SELLER) {
 
-            return true; 
+            return true;
         }
         else {
             return false;
