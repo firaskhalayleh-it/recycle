@@ -21,14 +21,6 @@ export class Discount extends BaseEntity {
     @Column({ type: 'boolean', default: true })
     active: boolean;
 
-    @CreateDateColumn()
-    created_at: Date;
-
-    @UpdateDateColumn()
-    updated_at: Date;
-
-    @DeleteDateColumn()
-    deleted_at: Date;
 
     @Column({ nullable: true })
     start_date: Date;
@@ -40,6 +32,6 @@ export class Discount extends BaseEntity {
     product: Product;
 
     isActive() {
-        return this.active && !this.deleted_at;
+        return this.active;
     }
 }

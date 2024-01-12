@@ -6,6 +6,9 @@ import routerPayment from './routes/UserRoutes/userPaymentRoutes';
 import ProductRoute from './routes/Product Routes/ProductRoute';
 import orderRouter from './routes/Order Routes/OrderItemRoute';
 import orderITemsRouter from './routes/Order Routes/OrderItemsRoute';
+import DiscountRouter from './routes/Discount Route/DiscountRoute';
+import AdminRoute from './routes/RolesRoutes.ts/AdminRoute';
+import SellerRoute from './routes/RolesRoutes.ts/SellerRoute';
 
 import cookieParser from 'cookie-parser';
 const app = express();
@@ -21,6 +24,10 @@ app.use('/api', routerPayment);
 app.use('/api', ProductRoute);
 app.use('/api', orderRouter);
 app.use('/api', orderITemsRouter);
+app.use('/api', DiscountRouter);
+app.use('/api', AdminRoute);
+app.use('/api', SellerRoute);
+
 
 
  app.listen (port, () => {

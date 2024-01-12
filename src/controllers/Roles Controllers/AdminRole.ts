@@ -76,10 +76,41 @@ export class AdminRoleController{
                res.status(400).json({message:'username is required'});
            }
 
-           
+
         }catch(error){
             res.status(500).json(error);
         }
     }
 
+    static assignAdminRole = async (req:Request,res:Response)=>{    
+        try{
+            const username = req.cookies.username;
+            if(!username){
+                res.status(400).json({message:'username is required'});
+            }
+            const user = await User.findOne({where:{username:username}});
+            if(!user){
+                res.status(404).json({message:'user not found'});
+            }
+            if(user){
+                const role = await Roles.findOne({where:{name:ROLES.ADMIN}});
+                if(!role){
+                    const role = new Roles();
+                    role.name = ROLES.ADMIN;
+                    user.role = role;
+                    await Roles.save(role);
+                }
+                if(role){
+                    role.name = ROLES.ADMIN;
+                    user.role = role;
+                    await Roles.save(role);
+                    res.status(200).json({message:'role assigned successfully'});
+                }
+                user.save();
+            }
+        }catch(error){
+            res.status(500).json(error);
+            console.log(error);
+        }
+    }
 }
