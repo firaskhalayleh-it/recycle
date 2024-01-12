@@ -4,12 +4,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class Discount extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column({ nullable: true })
-    name: string;
-
-    @Column({ nullable: true })
-    description: string;
+    
 
     @Column({ nullable: true, type: 'decimal' })
     discount_percent: number;

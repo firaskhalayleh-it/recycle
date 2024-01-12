@@ -23,6 +23,9 @@ export class OrderItems extends BaseEntity {
     
     @Column({ nullable: true })
     total: number;
+
+    @Column({ nullable: true })
+    delevary_status: string;
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
