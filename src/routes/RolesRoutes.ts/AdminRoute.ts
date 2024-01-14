@@ -3,6 +3,18 @@ import { Router } from "express";
 
 const router = Router();
 
-router.post('/admin', AdminRoleController.assignAdminRole);
+router.get('/users/total', AdminRoleController.getTotalUsers);
+router.get('/products/total', AdminRoleController.getTotalProducts);
+router.get('/orders/total', AdminRoleController.getTotalOrders);
+router.get('/orders/pending', AdminRoleController.getTotalOrdersPending);
+router.get('/orders/not-delivered', AdminRoleController.getOrdersNotDelivered);
+router.get('/products/out-of-stock', AdminRoleController.getProductsOutOfStock);
+router.get('/products/per-order', AdminRoleController.getProductsPerOrders);
+
+router.post('/assign/delivery-boy', AdminRoleController.assignDeleryBoy);
+router.post('/assign/admin', AdminRoleController.assignAdminRole);
+router.post('/assign/seller', AdminRoleController.assignSellerRole);
+router.post('/assign/driver', AdminRoleController.assignDriverRole);
+
 
 export default router;
