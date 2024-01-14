@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItems } from "./order_items";
 import { User } from "./user";
 
@@ -13,4 +13,7 @@ export class Drivers extends BaseEntity {
 
     @OneToOne(()=>User, user => user.id)
     user: User;
+
+    @Column({nullable:true})
+    status: string;
 }
