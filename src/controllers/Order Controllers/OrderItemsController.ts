@@ -17,9 +17,9 @@ export class OrderItemsController {
                 return res.status(404).send({ message: 'User not found' });
             }
 
-            const orders = await Order.find({ 
-                where: { customer: {username:username}, status: 'pending' },
-                relations: ['orderItems'] // if you have items related to orders
+            const orders = await Order.find({
+                where: { customer: { username: username }, status: 'pending' },
+                relations: ['orderItems']
             });
 
             if (!orders.length) {
@@ -28,7 +28,7 @@ export class OrderItemsController {
 
             const total = orders.reduce((sum, order) => sum + (order.total || 0), 0);
 
-            const userPayment = await UserPayment.findOne({ where: { userId:{username : username}} });
+            const userPayment = await UserPayment.findOne({ where: { userId: { username: username } } });
             if (!userPayment) {
                 return res.status(404).send({ message: 'User payment details not found' });
             }
@@ -47,5 +47,23 @@ export class OrderItemsController {
             console.error(error);
             res.status(500).send({ message: 'Error fetching orders', error });
         }
+    }
+
+    static submitOrder = async (req: Request, res: Response) => {
+        const { username } = req.cookies;
+
+        const orderItems = await Order.findOne({ where: { customer: { username: username }, status: 'pending' } });
+        if(!orderItems) {
+            return res.status(404).send({ message: 'No pending orders found' });
+        }
+        const orders = await Order.find({
+            where: { customer: { username: username }, status: 'submited' },
+            relations: ['orderItems']
+        });
+
+        if (!orders.length) {
+            return res.status(404).send({ message: 'No pending orders found' });
+        }
+
     }
 }

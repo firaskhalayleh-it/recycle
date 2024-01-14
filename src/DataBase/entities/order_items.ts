@@ -1,8 +1,9 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order";
 import { Product } from "./product";
 import { UserPayment } from "./user_payment";
 import { User } from "./user";
+import { Drivers } from "./Drivers";
 
 @Entity()
 export class OrderItems extends BaseEntity {
@@ -26,6 +27,9 @@ export class OrderItems extends BaseEntity {
 
     @Column({ nullable: true })
     delevary_status: string;
+
+    @ManyToOne ( () => Drivers)
+    driver: Drivers;
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;

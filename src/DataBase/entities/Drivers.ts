@@ -8,12 +8,23 @@ export class Drivers extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToMany(()=>OrderItems , orderItems => orderItems.order)
+    @OneToMany(() => OrderItems, orderItems => orderItems.order)
     orderitems: OrderItems[];
 
-    @OneToOne(()=>User, user => user.id)
+    @OneToOne(() => User, user => user.id)
     user: User;
 
-    @Column({nullable:true})
+    @Column({ nullable: true })
     status: string;
+
+
+    isAvilable() {
+        if (this.orderitems.length > 5) {
+            this.status = 'busy';
+        }
+        else {
+            this.status = `available, ${5 - this.orderitems.length} orders left.`;
+        }
+    }
+
 }
