@@ -4,5 +4,6 @@ import { Router } from "express";
 const router = Router();
 
 router.post('/seller', SellerController.assignSellerRole);
+router.post('/seller/showSales', SellerController.showAllSales);
 
 export default router;

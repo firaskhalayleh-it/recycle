@@ -53,6 +53,7 @@ export class ProductController {
             product.description = description;
             product.price = price;
             product.quantity = quantity;
+            product.original_quantity = quantity;
             const roleOfProvider = await User.findOne({ where: { username: provider } });
             if (!roleOfProvider) {
                 res.status(404).send({ message: 'Provider not found' });

@@ -29,6 +29,9 @@ export class Product extends BaseEntity {
     @Column({ nullable: true })
     quantity: number;
 
+    @Column({ nullable: true })
+    original_quantity: number;
+
 
     @OneToOne(() => Discount, { cascade: true })
     @JoinColumn({
@@ -67,6 +70,10 @@ export class Product extends BaseEntity {
 
     isOutOfStock() {
         return this.quantity <= 0;
+    }
+
+    saledQuantity() {
+        return this.original_quantity - this.quantity;
     }
 
    

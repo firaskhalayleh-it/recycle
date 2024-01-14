@@ -41,17 +41,20 @@ export class User extends BaseEntity {
 
   @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
   @JoinColumn()
-  userAddress: UserAddress;
+  // ...
 
-  @Column({ type: 'timestamp'})
-  created_at: Date;
+    userAddress: UserAddress;
 
-  @Column({ nullable: true })
-  updated_at: Date;
+    @Column({ type: 'timestamp'})
+    created_at: Date;
+
+    @Column({ nullable: true })
+    updated_at: Date;
 
 
-  @BeforeInsert()
-  encryptPassword() {
-    this.password = bcrypt.hashSync(this.password, 10);
-  }
+    @BeforeInsert()
+    encryptPassword() {
+      this.password = bcrypt.hashSync(this.password, 10);
+    }
+ 
 }
