@@ -20,6 +20,10 @@ export class UserPayment extends BaseEntity {
     @Column({ nullable: true })
     expire_date: string;
 
+    @Column({  type:'boolean',default: false})
+    cash_payment: boolean;
+
+
     @Column({ nullable: true })
     cvv: number;
 

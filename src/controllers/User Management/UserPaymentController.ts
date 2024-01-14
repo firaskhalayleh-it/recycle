@@ -35,7 +35,8 @@ export class UserPaymentController {
     static createUserPayment = async (req: Request, res: Response) => {
         try {
             const username = req.cookies.username;
-            const { card_number, provider, expire_date, cvv } = req.body;
+            const { card_number, provider, expire_date, cvv, cash_payment } = req.body;
+
             if (!username) {
                 res.status(400).json({ message: 'you must login first!' });
             }
@@ -53,7 +54,14 @@ export class UserPaymentController {
                 userPayment.cvv = cvv;
                 await UserPayment.save(userPayment);
                 res.status(200).send(userPayment);
-            }else
+            }else if (user && cash_payment) {
+                const userPayment = new UserPayment();
+                userPayment.userId = user;
+                userPayment.cash_payment = cash_payment;
+                await UserPayment.save(userPayment);
+                res.status(200).send(userPayment);
+            }
+            else
             {
                 res.status(400).json({ message: 'Invalid data' });
             }

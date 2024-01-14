@@ -4,6 +4,7 @@ import { Roles } from './Roles';
 import { UserAddress } from './user_address';
 import { Product } from './product';
 import { Order } from './order';
+import { Drivers } from './Drivers';
 
 @Entity()
 export class User extends BaseEntity {
@@ -41,20 +42,21 @@ export class User extends BaseEntity {
 
   @OneToOne(() => UserAddress, userAddress => userAddress.user, { nullable: true })
   @JoinColumn()
-  // ...
-
-    userAddress: UserAddress;
-
-    @Column({ type: 'timestamp'})
-    created_at: Date;
-
-    @Column({ nullable: true })
-    updated_at: Date;
+  userAddress: UserAddress;
 
 
-    @BeforeInsert()
-    encryptPassword() {
-      this.password = bcrypt.hashSync(this.password, 10);
-    }
- 
+  @Column({ type: 'timestamp' })
+  created_at: Date;
+
+  @Column({ nullable: true })
+  updated_at: Date;
+
+
+  @BeforeInsert()
+  encryptPassword() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
+
+
+
 }
