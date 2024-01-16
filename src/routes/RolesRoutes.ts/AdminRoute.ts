@@ -11,10 +11,9 @@ router.get('/orders/not-delivered', AdminRoleController.getOrdersNotDelivered);
 router.get('/products/out-of-stock', AdminRoleController.getProductsOutOfStock);
 router.get('/products/per-order', AdminRoleController.getProductsPerOrders);
 
-router.post('/assign/delivery-boy', AdminRoleController.assignDeleryBoy);
 router.post('/assign/admin', AdminRoleController.assignAdminRole);
 router.post('/assign/seller', AdminRoleController.assignSellerRole);
 router.post('/assign/driver', AdminRoleController.assignDriverRole);
-
+router.post('/assign/OrderToDriver', AdminRoleController.assignOrderToDriver);
 
 export default router;

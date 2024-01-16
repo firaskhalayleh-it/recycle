@@ -28,14 +28,13 @@ export class OrderItems extends BaseEntity {
     @Column({ nullable: true })
     delevary_status: string;
 
-    @ManyToOne ( () => Drivers)
+    @ManyToOne ( () => Drivers, drivers => drivers.orderitems)
+    @JoinColumn()
     driver: Drivers;
     
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @Column()
-    updated_at: Date;
 
     
 

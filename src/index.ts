@@ -9,8 +9,9 @@ import orderITemsRouter from './routes/Order Routes/OrderItemsRoute';
 import DiscountRouter from './routes/Discount Route/DiscountRoute';
 import AdminRoute from './routes/RolesRoutes.ts/AdminRoute';
 import SellerRoute from './routes/RolesRoutes.ts/SellerRoute';
+import DriverRoute from './routes/RolesRoutes.ts/DriverRoute';
 
-import cookieParser from 'cookie-parser';
+import cookieParser, { signedCookies } from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use('/api', orderITemsRouter);
 app.use('/api', DiscountRouter);
 app.use('/api', AdminRoute);
 app.use('/api', SellerRoute);
+app.use('/api', DriverRoute);
 
 
 

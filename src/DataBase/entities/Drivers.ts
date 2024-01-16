@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { OrderItems } from "./order_items";
 import { User } from "./user";
 
@@ -8,10 +8,12 @@ export class Drivers extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToMany(() => OrderItems, orderItems => orderItems.order)
+    @OneToMany(() => OrderItems, orderItem => orderItem.driver)
+    @JoinColumn()
     orderitems: OrderItems[];
 
     @OneToOne(() => User, user => user.id)
+    @JoinColumn()
     user: User;
 
     @Column({ nullable: true })
@@ -19,6 +21,7 @@ export class Drivers extends BaseEntity {
 
 
     isAvilable() {
+        
         if (this.orderitems.length > 5) {
             this.status = 'busy';
         }

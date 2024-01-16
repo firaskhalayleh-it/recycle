@@ -1,3 +1,4 @@
+import { locales } from "validator/lib/isIBAN";
 import { Order } from "../../DataBase/entities/order";
 import { OrderItems } from "../../DataBase/entities/order_items";
 import { User } from "../../DataBase/entities/user";
@@ -32,17 +33,23 @@ export class OrderItemsController {
             if (!userPayment) {
                 return res.status(404).send({ message: 'User payment details not found' });
             }
+            const isorderItems = await OrderItems.findOne({ where: { customer: { username: username } } });
+            if (isorderItems) {
+                res.status(200).send(isorderItems);
+            }else {
 
-            const orderItems = OrderItems.create({
-                order: orders,
-                customer: user,
-                total: total,
-                user_payment: userPayment
-            });
+                const orderItems = new OrderItems();
+                orderItems.customer = user;
+                orderItems.user_payment = userPayment;
+                orderItems.total = total;
+                orderItems.delevary_status = 'pending';
+                orderItems.order = orders;
+                await orderItems.save();
+                res.status(200).send(orderItems);   
+            }
 
-            await orderItems.save();
 
-            res.send(orderItems);
+
         } catch (error) {
             console.error(error);
             res.status(500).send({ message: 'Error fetching orders', error });
@@ -50,19 +57,36 @@ export class OrderItemsController {
     }
 
     static submitOrder = async (req: Request, res: Response) => {
-        const { username } = req.cookies;
+        const username = req.cookies.username;
+        try {
+            if (!username) {
+                return res.status(400).send({ message: 'You must log in first!' });
+            }
+            const user = await User.findOne({ where: { username: username } });
+            if (!user) {
+                return res.status(404).send({ message: 'User not found' });
+            }
+            const orderItems = await Order.findOne({ where: { customer: { username: user.username }, status: 'pending' } });
+            if (!orderItems) {
+                return res.status(404).send({ message: 'No pending orders found' });
+            }
+            const orders = await Order.find({
+                where: { customer: { username: username }, status: 'pending' },
+                relations: ['orderItems']
+            });
+            orders.forEach(async (order) => {
+                order.status = 'submitted';
+                await order.save();
+            });
 
-        const orderItems = await Order.findOne({ where: { customer: { username: username }, status: 'pending' } });
-        if(!orderItems) {
-            return res.status(404).send({ message: 'No pending orders found' });
-        }
-        const orders = await Order.find({
-            where: { customer: { username: username }, status: 'submited' },
-            relations: ['orderItems']
-        });
+            if (orders.length == 0) {
+                return res.status(404).send({ message: 'No pending orders found' });
+            }
 
-        if (!orders.length) {
-            return res.status(404).send({ message: 'No pending orders found' });
+            res.send ( orders );
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Error fetching orders', error });
         }
 
     }
