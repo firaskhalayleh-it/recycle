@@ -1,8 +1,8 @@
 import express, { request } from 'express';
 import { User } from '../../DataBase/entities/user';
 import { ROLES, Roles } from '../../DataBase/entities/Roles';
-import bcrypt from 'bcrypt';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Product } from '../../DataBase/entities/product';
 

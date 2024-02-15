@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'path';
+import cors from 'cors';
 import datasource from './DataBase/datasource';
 import router from './routes/UserRoutes/UserRoute';
 import routerAddress from './routes/UserRoutes/UserAddressRoute';
@@ -15,8 +17,14 @@ import cookieParser, { signedCookies } from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cookieParser());
+app.use(cors());
+const publicPath = path.join("./public/");
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(publicPath));
+app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
 
 
 app.use('/api', router);
@@ -36,4 +44,5 @@ app.use('/api', DriverRoute);
      datasource.initilizeDB();
     console.log(`server is listening on port ${port}`);
 })
+
 
