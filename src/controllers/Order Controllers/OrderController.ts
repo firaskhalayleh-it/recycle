@@ -32,8 +32,8 @@ export class OrderController {
     static createOrderItem = async (req: Request, res: Response) => {
 
         try {
-            const username = req.cookies.username;
-            const { productName, quantity } = req.body;
+            
+            const { productName, quantity, username } = req.body;
             if (!username) {
                 res.status(400).send({ message: 'username is required' });
             }

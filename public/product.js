@@ -21,7 +21,6 @@ function fetchProducts() {
       });
   }
 // Function to display products in cards
-// Function to display products in cards
  const displayProducts= (products)=> {
     const productsContainer = document.getElementById('productsContainer');
     let row;
@@ -34,9 +33,7 @@ function fetchProducts() {
           productsContainer.appendChild(row);
         }
     
-        const categories = product.categories && Array.isArray(product.categories)
-          ? product.categories.map(category => category.name).join(', ')
-          : 'No categories';
+   
     
         // Normalize the image URL by replacing double slashes with a single slash
         const imageUrl = product.image.replace(/\/\//g, '/');
@@ -47,11 +44,8 @@ function fetchProducts() {
               <img src="../src/${imageUrl}" class="card-img-top" alt="${product.name}">
               <div class="card-body">
                 <h5 class="card-title">${product.name}</h5>
-                <p class="card-text">${product.description}</p>
                 <p class="card-text">Price: ${product.price}</p>
-                <p class="card-text">Quantity: ${product.quantity}</p>
-                <p class="card-text">Provider: ${product.provider.username}</p>
-                <a href="product.html?id=${product.id}" class="btn btn-primary">View Details</a>
+                <a href="./product.html?id=${product.id}" class="btn btn-primary">View Details</a>
               </div>
             </div>
           </div>
@@ -62,12 +56,6 @@ function fetchProducts() {
       });
   }
   
-  // Helper function to create DOM element from HTML string
-  function createElementFromHTML(htmlString) {
-    const div = document.createElement('div');
-    div.innerHTML = htmlString.trim();
-    return div.firstChild;
-  }
   
   
   // Call fetchProducts when the page loads

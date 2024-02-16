@@ -38,6 +38,18 @@ export class ProductController {
         }
     }
 
+    static getProductByID = async (req: express.Request, res: express.Response) => {
+        try {
+            const product = await Product.findOne({ where: { id: req.params.id } });
+            if (!product) {
+                return res.status(404).send({ message: 'Product not found' });
+            }
+            res.send(product);
+        } catch (error) {
+            console.error('Error getting product:', error);
+        }
+    }
+
     static createProduct = async (req: express.Request, res: express.Response) => {
         try {
             const { name, description, price, quantity, provider } = req.body;
@@ -108,6 +120,7 @@ export class ProductController {
                 return res.status(404).send({ message: 'Product not found' });
             }
 
+            
             await Product.remove(product);
             res.status(200).send({ message: 'Product deleted successfully' });
         } catch (error) {

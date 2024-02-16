@@ -1,11 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   const isLoggedIn = true; // Replace 'true' with your logic to check if the user is logged in
 
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loginBtn = document.getElementById('login-btn'); // Get reference to login button
-  const productsContainer = document.getElementById('productsContainer');
-  const searchInput = document.getElementById('searchInput');
-  const submitSearchBtn = document.getElementById('submitSearch'); // Get reference to submitSearch button
+  const logoutBtn = document.getElementById("logoutBtn");
+  const loginBtn = document.getElementById("login-btn"); // Get reference to login button
+  const productsContainer = document.getElementById("productsContainer");
+  const searchInput = document.getElementById("searchInput");
+  const submitSearchBtn = document.getElementById("submitSearch"); // Get reference to submitSearch button
 
   // Show/hide buttons based on authentication status
   if (isLoggedIn) {
@@ -18,71 +18,85 @@ document.addEventListener('DOMContentLoaded', function () {
     loginBtn.style.display = "block"; // Show login button
   }
 
-  logoutBtn.addEventListener('click', function () {
-    fetch('http://localhost:3000/api/users/logout', {
-      method: 'POST',
+  logoutBtn.addEventListener("click", function () {
+    fetch("http://localhost:3000/api/users/logout", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Logout failed');
+          throw new Error("Logout failed");
         }
         return response.text(); // Parse response as text
       })
-      .then(data => {
-        if (data === 'logged out') {
-          window.location.href = './home.html';
+      .then((data) => {
+        if (data === "logged out") {
+          window.location.href = "./home.html";
         } else {
-          throw new Error('Unexpected response from server');
+          throw new Error("Unexpected response from server");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle logout error
-        console.error('Error logging out:', error);
-        window.alert('Error logging out');
+        console.error("Error logging out:", error);
+        window.alert("Error logging out");
       });
   });
 
-  submitSearchBtn.addEventListener('click', searchProducts);
+  submitSearchBtn.addEventListener("click", searchProducts);
 
   function searchProducts() {
+    // Get the search query from the input field and remove leading/trailing white spaces
     const searchQuery = searchInput.value.trim();
     if (!searchQuery) {
-      window.alert('Please enter a search query.');
+      window.alert("Please enter a search query.");
       return;
     }
-
-    fetch(`http://localhost:3000/api/product/${encodeURIComponent(searchQuery)}`)
-      .then(response => {
+      
+    fetch(
+      `http://localhost:3000/api/products/${encodeURIComponent(searchQuery)}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: searchQuery }),
+      }
+    )
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch product');
+          throw new Error("Failed to fetch product");
         }
         return response.json(); // Parse response as JSON
       })
-      .then(product => {
+      .then((product) => {
         renderProduct(product);
+        console.log("Product fetched:", product);
       })
-      .catch(error => {
-        console.error('Error fetching product:', error);
+      .catch((error) => {
+        console.error("Error fetching product:", error);
         // Optionally handle the error here
-        window.alert('Error fetching product');
+        window.alert("Error fetching product");
       });
   }
 
   function renderProduct(product) {
     // Clear the products container
-    productsContainer.innerHTML = '';
+    productsContainer.innerHTML = "";
+    // Normalize the image URL by replacing double slashes with a single slash
+    // if image is not available, use a default image instead
 
-    const imageUrl = product.image.replace(/\/\//g, '/');
+    const imageUrl = product.image ? product.image.replace(/\/\//g, "/") : "";
+
     const card = createProductCard(product, imageUrl);
     productsContainer.appendChild(card);
   }
 
   function createProductCard(product, imageUrl) {
-    const card = document.createElement('div');
-    card.classList.add('col-lg-4');
+    const card = document.createElement("div");
+    card.classList.add("col-lg-4");
 
     const cardInner = `
       <div class="card">

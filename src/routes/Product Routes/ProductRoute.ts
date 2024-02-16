@@ -10,7 +10,9 @@ const router = express.Router();
 router.get('/products', ProductController.getAllProducts);
 
 // Get product by name
-router.get('/products/:name', ProductController.getProductByName);
+router.post('/products/:name', ProductController.getProductByName);
+
+router.post('/products/search/:id', ProductController.getProductByID);
 
 // Create a new product
 router.post('/products', upload.single('image'), ProductController.createProduct);
